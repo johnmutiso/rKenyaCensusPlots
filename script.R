@@ -101,16 +101,15 @@ ggsave(plot = plot1, width = 18, height = 19.8, dpi = 400,
 #+++++++++++++++++++++++++++++++ PLOT 2 +++++++++++++++++++++++++++++++++++++++++=+++
 # Data ------------------------------------------------
 tabV2_2_2 <- 
-  rKenyaCensus::V2_T2.2 %>%
+  rKenyaCensus::V2_T2.2 %>% str()
   mutate(persons_hld = Sex_Total/Households_Total) %>% #persons per household
-  select(-c(3:8)) %>% 
-  mutate_at(.vars = c(3,4), .funs = as.numeric)
+  select(-c(3:8))
 
 # Overall Kenya's Persons per household
 persons_hld = tabV2_2_2 %>% filter(County=='KENYA') %>% select(persons_hld) %>% as.numeric() 
 # plot ---------------------------------------------
 plot2 <- 
-  ggplot(data = tabV2_2_2 %>% filter(!str_detect(County, '^KE')),
+  ggplot(data = tabV2_2_2 %>% filter(!County=='KENYA'),
          aes(reorder(County, persons_hld), persons_hld)) +
   geom_point(aes(size = `LandArea(Sq km)`,
                  fill = log10(`Density(Persons per Sq km)`)),
